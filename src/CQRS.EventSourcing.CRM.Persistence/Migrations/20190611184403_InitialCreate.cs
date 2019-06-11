@@ -8,6 +8,8 @@ namespace CQRS.EventSourcing.CRM.Persistence.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.MigrateEventStoreTables();
+
             migrationBuilder.CreateTable(
                 name: "Customers",
                 columns: table => new
@@ -59,6 +61,8 @@ namespace CQRS.EventSourcing.CRM.Persistence.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropEventStoreTables();
+
             migrationBuilder.DropTable(
                 name: "Addresses");
 
