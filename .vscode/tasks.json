@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/src/CQRS.EventSourcing.CRM.API/cqrs-eventsourcing-crm.csproj"
+                "${workspaceFolder}/src/CQRS.EventSourcing.CRM.API/CQRS.EventSourcing.CRM.API.csproj"
             ],
             "problemMatcher": "$tsc"
         },
@@ -17,7 +17,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/src/CQRS.EventSourcing.CRM.API/cqrs-eventsourcing-crm.csproj"
+                "${workspaceFolder}/src/CQRS.EventSourcing.CRM.API/CQRS.EventSourcing.CRM.API.csproj"
             ],
             "problemMatcher": "$tsc"
         },
@@ -28,7 +28,7 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/src/CQRS.EventSourcing.CRM.API/cqrs-eventsourcing-crm.csproj"
+                "${workspaceFolder}/src/CQRS.EventSourcing.CRM.API/CQRS.EventSourcing.CRM.API.csproj"
             ],
             "problemMatcher": "$tsc"
         }

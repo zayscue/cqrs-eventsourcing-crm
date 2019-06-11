@@ -1,10 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\CQRS.EventSourcing.CRM.Domain\CQRS.EventSourcing.CRM.Domain.csproj" />
+    <ProjectReference Include="..\CQRS.EventSourcing.CRM.Domain\CQRS.EventSourcing.CRM.Domain.csproj"/>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="8.4.0"/>
+    <PackageReference Include="MediatR" Version="7.0.0"/>
+    <PackageReference Include="AutoMapper" Version="8.1.1"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.4"/>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0"/>
   </ItemGroup>
 </Project>

@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/CQRS.EventSourcing.CRM.API/bin/Debug/netcoreapp2.2/cqrs-eventsourcing-crm.dll",
+            "program": "${workspaceFolder}/src/CQRS.EventSourcing.CRM.API/bin/Debug/netcoreapp2.2/CQRS.EventSourcing.CRM.API.dll",
             "args": [],
             "cwd": "${workspaceFolder}/src/CQRS.EventSourcing.CRM.API",
             "stopAtEntry": false,
