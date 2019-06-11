@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CQRS.EventSourcing.CRM.Domain\CQRS.EventSourcing.CRM.Domain.csproj" />
+  </ItemGroup>
+</Project>
