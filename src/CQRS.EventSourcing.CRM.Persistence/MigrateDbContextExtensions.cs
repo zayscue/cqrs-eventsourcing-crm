@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CQRS.EventSourcing.CRM.Persistence
 {
-    public static class MigrateDbContextExtension
+    public static class MigrateDbContextExtensions
     {
         public static IWebHost MigrateDbContext<TContext>(this IWebHost webHost, Action<TContext, IServiceProvider> seeder) where TContext : DbContext
         {

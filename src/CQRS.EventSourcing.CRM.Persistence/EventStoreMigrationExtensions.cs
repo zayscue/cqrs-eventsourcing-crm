@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CQRS.EventSourcing.CRM.Persistence
 {
-    public static class EventStoreMigrationExtension
+    public static class EventStoreMigrationExtensions
     {
         public static MigrationBuilder MigrateEventStoreTables(this MigrationBuilder migrationBuilder)
         {
@@ -58,6 +58,44 @@ namespace CQRS.EventSourcing.CRM.Persistence
                 )
             END
             GO
+
+            IF (NOT EXISTS (SELECT *
+            FROM sys.procedures
+            WHERE name = 'InsertEvent'))
+            BEGIN
+                EXECUTE('CREATE PROCEDURE dbo.InsertEvent
+                    @AggregateId uniqueidentifier,
+                    @Type nvarchar(200),
+                    @EventName nvarchar(200),
+                    @EventData nvarchar(max),
+                    @TranName varchar(20) = ''InsertEvent''
+                AS
+                BEGIN
+                    BEGIN TRANSACTION @TranName;
+
+                    DECLARE @Version int;
+
+                    SELECT @Version = Version FROM dbo.Aggregates WHERE Id = @AggregateId
+
+                    IF @Version IS NULL
+                    BEGIN
+                        SET @Version = 1;
+                        INSERT INTO dbo.Aggregates ([Id], [Type], [Version]) VALUES (@AggregateId, @Type, @Version);
+                    END
+                    ELSE
+                    BEGIN
+                        SET @Version = @Version + 1;
+                    END
+
+                    INSERT INTO dbo.Events ([Id],[TimeStamp],[Name],[Version],[AggregateId],[Data])
+                    VALUES (NEWID(), GETUTCDATE(), @EventName, @Version, @AggregateId, @EventData);
+
+                    UPDATE dbo.Aggregates SET [Version] = @Version WHERE Id = @AggregateId
+
+                    COMMIT TRANSACTION @TranName;
+                END')
+            END
+            GO
             ");
 
             return migrationBuilder;
@@ -90,6 +128,14 @@ namespace CQRS.EventSourcing.CRM.Persistence
             WHERE TABLE_SCHEMA = 'dbo' AND TABLE_NAME = 'Snapshots'))
             BEGIN
                 DROP TABLE Snapshots
+            END
+            GO
+
+            IF (EXISTS (SELECT *
+            FROM sys.procedures
+            WHERE name = 'InsertEvent'))
+            BEGIN
+                DROP PROCEDURE 'InsertEvent';
             END
             GO
             ");
