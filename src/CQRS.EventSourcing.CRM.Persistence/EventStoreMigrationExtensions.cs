@@ -68,7 +68,8 @@ namespace CQRS.EventSourcing.CRM.Persistence
                     @Type nvarchar(200),
                     @EventName nvarchar(200),
                     @EventData nvarchar(max),
-                    @TranName varchar(20) = ''InsertEvent''
+                    @TranName varchar(20) = ''InsertEvent'',
+                    @EventId uniqueidentifier OUTPUT
                 AS
                 BEGIN
                     BEGIN TRANSACTION @TranName;
@@ -87,12 +88,16 @@ namespace CQRS.EventSourcing.CRM.Persistence
                         SET @Version = @Version + 1;
                     END
 
+                    SET @EventId = NEWID();
+
                     INSERT INTO dbo.Events ([Id],[TimeStamp],[Name],[Version],[AggregateId],[Data])
-                    VALUES (NEWID(), GETUTCDATE(), @EventName, @Version, @AggregateId, @EventData);
+                    VALUES (@EventId, GETUTCDATE(), @EventName, @Version, @AggregateId, @EventData);
 
                     UPDATE dbo.Aggregates SET [Version] = @Version WHERE Id = @AggregateId
 
                     COMMIT TRANSACTION @TranName;
+
+                    RETURN
                 END')
             END
             GO

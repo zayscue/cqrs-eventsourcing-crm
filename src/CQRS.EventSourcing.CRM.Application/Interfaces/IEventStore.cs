@@ -6,6 +6,6 @@ namespace CQRS.EventSourcing.CRM.Application.Interfaces
 {
     public interface IEventStore
     {
-        Task SaveChange(Guid aggregateId, IDomainEvent @event);
+        Task<Guid> SaveChange(Guid aggregateId, IDomainEvent @event);
     }
 }

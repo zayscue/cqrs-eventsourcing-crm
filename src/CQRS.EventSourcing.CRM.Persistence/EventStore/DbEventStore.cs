@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Transactions;
 using CQRS.EventSourcing.CRM.Application.Interfaces;
 using CQRS.EventSourcing.CRM.Domain.Events;
+using Dapper;
 using Dapper.Abstractions;
 using Newtonsoft.Json;
 
@@ -18,18 +19,20 @@ namespace CQRS.EventSourcing.CRM.Persistence.EventStore
             _dbExecutorFactory = dbExecutorFactory ?? throw new ArgumentNullException(nameof(dbExecutorFactory));
         }
 
-        public async Task SaveChange(Guid aggregateId, IDomainEvent @event)
+        public async Task<Guid> SaveChange(Guid aggregateId, IDomainEvent @event)
         {
             var sql = @"InsertEvent";
             using (var db = _dbExecutorFactory.CreateExecutor())
             {
-                await db.ExecuteAsync(sql, new
-                {
-                    AggregatId = aggregateId,
-                    Type = @event.EntityType,
-                    EventName = @event.EventName,
-                    EventData = JsonConvert.SerializeObject(@event.SerializeData())
-                }, null, null, CommandType.StoredProcedure);
+                var parameters = new DynamicParameters();
+                parameters.Add("@AggregateId", aggregateId, dbType: DbType.Guid, direction: ParameterDirection.Input);
+                parameters.Add("@Type", @event.EntityType, dbType: DbType.String, direction: ParameterDirection.Input);
+                parameters.Add("@EventName", @event.EventName, dbType: DbType.String, direction: ParameterDirection.Input);
+                parameters.Add("@EventData", JsonConvert.SerializeObject(@event.SerializeData()), dbType: DbType.String, direction: ParameterDirection.Input);
+                parameters.Add("@EventId", dbType: DbType.Guid, direction: ParameterDirection.ReturnValue);
+                await db.ExecuteAsync(sql, parameters, commandType: CommandType.StoredProcedure);
+
+                return parameters.Get<Guid>("@EventId");
             }
         }
     }
