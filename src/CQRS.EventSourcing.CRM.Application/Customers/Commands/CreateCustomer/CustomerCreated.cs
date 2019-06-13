@@ -32,12 +32,10 @@ namespace CQRS.EventSourcing.CRM.Application.Customers.Commands.CreateCustomer
                 var entity = new Customer
                 {
                     Id = notification.AggregateId,
-                    Prefix = notification.DomainEvent.Prefix,
-                    FirstName = notification.DomainEvent.FirstName,
-                    LastName = notification.DomainEvent.LastName,
-                    Title = notification.DomainEvent.Title,
                     Created = @event.TimeStamp
                 };
+                var redux = new ReduxStore<Customer>(Customer.Reducer, entity);
+                redux.Dispatch(notification.DomainEvent);
 
                 await _context.Customers.AddAsync(entity, cancellationToken);
 

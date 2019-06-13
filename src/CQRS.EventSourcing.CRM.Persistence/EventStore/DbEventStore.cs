@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -52,6 +53,17 @@ namespace CQRS.EventSourcing.CRM.Persistence.EventStore
 
                 return parameters.Get<Guid>("@EventId");
             }
+        }
+
+        public async Task<IEnumerable<Guid>> SaveChanges(Guid aggregateId, IEnumerable<IDomainEvent> @events)
+        {
+            var eventIds = new List<Guid>();
+            foreach (var @event in @events)
+            {
+                var eventId = await SaveChange(aggregateId, @event);
+                eventIds.Add(eventId);
+            }
+            return eventIds;
         }
     }
 }

@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using CQRS.EventSourcing.CRM.Domain.Events.Customers;
+using ActionType = System.Object;
 
 namespace CQRS.EventSourcing.CRM.Domain.Entities
 {
@@ -18,5 +20,32 @@ namespace CQRS.EventSourcing.CRM.Domain.Entities
         public DateTime Created { get; set; }
         public DateTime? Deleted { get; set; }
         public ICollection<Address> Addresses { get; set; }
+
+        public static Customer Reducer(Customer state, ActionType action)
+        {
+            switch (action)
+            {
+                case CustomerCreatedEvent created:
+                    state.FirstName = created.FirstName;
+                    state.LastName = created.LastName;
+                    state.Prefix = created.Prefix;
+                    state.Title = created.Title;
+                    return state;
+                case CustomerFirstNameChangedEvent firstNameChanged:
+                    state.FirstName = firstNameChanged.FirstName;
+                    return state;
+                case CustomerLastNameChangedEvent lastNameChanged:
+                    state.LastName = lastNameChanged.LastName;
+                    return state;
+                case CustomerPrefixChangedEvent prefixChanged:
+                    state.Prefix = prefixChanged.Prefix;
+                    return state;
+                case CustomerTitleChangedEvent titleChanged:
+                    state.Title = titleChanged.Title;
+                    return state;
+                default:
+                    return state;
+            }
+        }
     }
 }
