@@ -3,6 +3,7 @@ using System.Data;
 using System.Threading.Tasks;
 using System.Transactions;
 using CQRS.EventSourcing.CRM.Application.Interfaces;
+using CQRS.EventSourcing.CRM.Domain;
 using CQRS.EventSourcing.CRM.Domain.Events;
 using Dapper;
 using Dapper.Abstractions;
@@ -17,6 +18,23 @@ namespace CQRS.EventSourcing.CRM.Persistence.EventStore
         public DbEventStore(IDbExecutorFactory dbExecutorFactory)
         {
             _dbExecutorFactory = dbExecutorFactory ?? throw new ArgumentNullException(nameof(dbExecutorFactory));
+        }
+
+        public async Task<Event> GetEvent(Guid eventId)
+        {
+            var sql = @"SELECT [Id]
+                            ,[TimeStamp]
+                            ,[Name]
+                            ,[Version]
+                            ,[AggregateId]
+                            ,[Sequence]
+                            ,[Data]
+                        FROM [CRM].[dbo].[Events]
+                        WHERE [Id] = @EventId";
+            using(var db = _dbExecutorFactory.CreateExecutor())
+            {
+                return await db.QuerySingleAsync<Event>(sql, new { EventId = eventId });
+            }
         }
 
         public async Task<Guid> SaveChange(Guid aggregateId, IDomainEvent @event)

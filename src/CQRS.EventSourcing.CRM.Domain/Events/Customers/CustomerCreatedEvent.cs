@@ -4,7 +4,7 @@ using CQRS.EventSourcing.CRM.Domain.Entities;
 
 namespace CQRS.EventSourcing.CRM.Domain.Events.Customers
 {
-    public sealed class CustomerCreated : DomainEvent<Customer>
+    public sealed class CustomerCreatedEvent : DomainEvent<Customer>
     {
         public override string EventName => GetType().Name;
 

@@ -29,7 +29,7 @@ namespace CQRS.EventSourcing.CRM.Application.Customers.Commands.CreateCustomer
             {
                 var aggregateId = Guid.NewGuid();
 
-                var @event = new CustomerCreated
+                var @event = new CustomerCreatedEvent
                 {
                     Prefix = request.Prefix,
                     FirstName = request.FirstName,
