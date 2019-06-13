@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using CQRS.EventSourcing.CRM.Application.Customers;
 using CQRS.EventSourcing.CRM.Application.Interfaces;
 using CQRS.EventSourcing.CRM.Persistence;
 using CQRS.EventSourcing.CRM.Persistence.EventStore;
@@ -34,8 +35,6 @@ namespace CQRS.EventSourcing.CRM.API
         {
             //Add MediatR
             services.AddMediatR(typeof(CQRS.EventSourcing.CRM.Application.Customers.Commands.CreateCustomer.CreateCustomerCommand.Handler).GetTypeInfo().Assembly);
-            //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPerformanceBehaviour<,>));
-            //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
 
             // Add DbContext using SQL Server Provider
             services.AddDbContext<CRMDbContext>(options =>
@@ -47,6 +46,10 @@ namespace CQRS.EventSourcing.CRM.API
             services.AddSingleton<IDbExecutorFactory>(x =>
                 new SqlExecutorFactory(Configuration.GetConnectionString("CRMDatabase")));
             services.AddTransient<IEventStore, DbEventStore>();
+
+            // Add Customer Snapshotting Background Service
+            services.AddTransient<CustomerSnapshotter>();
+            services.AddHostedService<TimedCustomerSnapshottingService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

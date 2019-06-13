@@ -11,5 +11,9 @@ namespace CQRS.EventSourcing.CRM.Application.Interfaces
         Task<Guid> SaveChange(Guid aggregateId, IDomainEvent @event);
         Task<IEnumerable<Guid>> SaveChanges(Guid aggregateId, IEnumerable<IDomainEvent> @events);
         Task<Event> GetEvent(Guid eventId);
+        Task<IEnumerable<Event>> GetEvents(Guid aggregateId, int startRange, int endRange);
+        Task<IEnumerable<(Guid AggregateId, int LastSnapshotVersion, int CurrentVersion)>> QuerySnapshotDeltas(string aggregateType);
+        Task<Snapshot> GetSnapshot(Guid aggregateId, int version);
+        Task SaveSnapshot(Snapshot snapshot);
     }
 }
