@@ -19,8 +19,8 @@ namespace CQRS.EventSourcing.CRM.Application.Customers
 
         public async Task CreateSnapshots()
         {
-            var customerSnapShotDeltas = await _eventStore.QuerySnapshotDeltas(AggregateType);
-            foreach (var delta in customerSnapShotDeltas)
+            var customerSnapshotDeltas = await _eventStore.QuerySnapshotDeltas(AggregateType);
+            foreach (var delta in customerSnapshotDeltas)
             {
                 var @events = await _eventStore.GetEvents(delta.AggregateId,
                     delta.LastSnapshotVersion, delta.CurrentVersion);
