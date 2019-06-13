@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using CQRS.EventSourcing.CRM.Application.Interfaces;
 using CQRS.EventSourcing.CRM.Persistence;
+using CQRS.EventSourcing.CRM.Persistence.EventStore;
+using Dapper.Abstractions;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,11 +32,21 @@ namespace CQRS.EventSourcing.CRM.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Add MediatR
+            services.AddMediatR(typeof(CQRS.EventSourcing.CRM.Application.Customers.Commands.CreateCustomer.CreateCustomerCommand.Handler).GetTypeInfo().Assembly);
+            //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestPerformanceBehaviour<,>));
+            //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestValidationBehavior<,>));
+
             // Add DbContext using SQL Server Provider
             services.AddDbContext<CRMDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("CRMDatabase")));
             services.AddDbContext<ICRMDbContext, CRMDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("CRMDatabase")));
+
+            // Add IEventStore
+            services.AddSingleton<IDbExecutorFactory>(x =>
+                new SqlExecutorFactory(Configuration.GetConnectionString("CRMDatabase")));
+            services.AddTransient<IEventStore, DbEventStore>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

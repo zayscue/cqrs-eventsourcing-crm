@@ -31,7 +31,7 @@ namespace CQRS.EventSourcing.CRM.Persistence.EventStore
                             ,[Data]
                         FROM [CRM].[dbo].[Events]
                         WHERE [Id] = @EventId";
-            using(var db = _dbExecutorFactory.CreateExecutor())
+            using (var db = _dbExecutorFactory.CreateExecutor())
             {
                 return await db.QuerySingleAsync<Event>(sql, new { EventId = eventId });
             }
@@ -47,7 +47,7 @@ namespace CQRS.EventSourcing.CRM.Persistence.EventStore
                 parameters.Add("@Type", @event.EntityType, dbType: DbType.String, direction: ParameterDirection.Input);
                 parameters.Add("@EventName", @event.EventName, dbType: DbType.String, direction: ParameterDirection.Input);
                 parameters.Add("@EventData", JsonConvert.SerializeObject(@event.SerializeData()), dbType: DbType.String, direction: ParameterDirection.Input);
-                parameters.Add("@EventId", dbType: DbType.Guid, direction: ParameterDirection.ReturnValue);
+                parameters.Add("@EventId", dbType: DbType.Guid, direction: ParameterDirection.Output);
                 await db.ExecuteAsync(sql, parameters, commandType: CommandType.StoredProcedure);
 
                 return parameters.Get<Guid>("@EventId");
