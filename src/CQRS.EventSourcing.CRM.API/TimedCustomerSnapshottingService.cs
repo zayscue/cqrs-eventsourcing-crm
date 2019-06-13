@@ -11,7 +11,10 @@ namespace CQRS.EventSourcing.CRM.API
     {
         private readonly CustomerSnapshotter _snapshotter;
         private readonly ILogger _logger;
-        private Timer _timer;
+
+        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private readonly TimeSpan _interval = TimeSpan.FromSeconds(30);
+        private Task _outputTask;
 
         public TimedCustomerSnapshottingService(CustomerSnapshotter snapshotter, ILogger<TimedCustomerSnapshottingService> logger)
         {
@@ -23,29 +26,40 @@ namespace CQRS.EventSourcing.CRM.API
         {
             _logger.LogInformation("Customer Snapshotting Background Service is starting.");
 
-            _timer = new Timer(DoWork, null, TimeSpan.Zero,
-                TimeSpan.FromSeconds(30));
+            _cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _cancellationTokenSource.Token);
+
+            _outputTask = Task.Factory.StartNew<Task>(
+                DoWork,
+                null,
+                TaskCreationOptions.LongRunning);
 
             return Task.CompletedTask;
         }
 
-        private void DoWork(object state)
+        private async Task DoWork(object state)
         {
-            _snapshotter.CreateSnapshots().GetAwaiter().GetResult();
+            while (!_cancellationTokenSource.IsCancellationRequested)
+            {
+                _logger.LogInformation("Starting to snapshot customer aggregates.");
+                await _snapshotter.CreateSnapshots();
+                await Task.Delay(_interval, _cancellationTokenSource.Token);
+            }
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Customer Snapshotting Background Service is stopping.");
 
-            _timer?.Change(Timeout.Infinite, 0);
+            _cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _cancellationTokenSource.Token);
+
+            _cancellationTokenSource.Cancel();
 
             return Task.CompletedTask;
         }
 
         public void Dispose()
         {
-            _timer?.Dispose();
+            _outputTask?.Dispose();
         }
     }
 }
