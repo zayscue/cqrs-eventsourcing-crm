@@ -22,26 +22,29 @@ namespace CQRS.EventSourcing.CRM.Application.Customers
             var customerSnapshotDeltas = await _eventStore.QuerySnapshotDeltas(AggregateType);
             foreach (var delta in customerSnapshotDeltas)
             {
-                var @events = await _eventStore.GetEvents(delta.AggregateId,
-                    delta.LastSnapshotVersion, delta.CurrentVersion);
-                Customer customerSnapshot = null;
+                ReduxStore<Customer> redux = null;
                 if (delta.LastSnapshotVersion > 0)
                 {
                     var snapShot = await _eventStore.GetSnapshot(delta.AggregateId, delta.LastSnapshotVersion);
-                    customerSnapshot = JsonConvert.DeserializeObject<Customer>(snapShot.SerializedData);
+                    var customerSnapshot = JsonConvert.DeserializeObject<Customer>(snapShot.SerializedData);
+                    redux = new ReduxStore<Customer>(Customer.Reducer, customerSnapshot);
                 }
                 else
                 {
-                    customerSnapshot = new Customer();
+                    redux = new ReduxStore<Customer>(Customer.Reducer, new Customer
+                    {
+                        Id = delta.AggregateId
+                    });
                 }
-                var redux = new ReduxStore<Customer>(Customer.Reducer, customerSnapshot);
+
+                var @events = await _eventStore.GetEvents(delta.AggregateId,
+                    delta.LastSnapshotVersion, delta.CurrentVersion);
                 foreach (var @event in @events)
                 {
                     switch (@event.Name)
                     {
                         case "CustomerCreatedEvent":
-                            customerSnapshot.Id = delta.AggregateId;
-                            customerSnapshot.Created = @event.TimeStamp;
+                            redux.Dispatch(@event.TimeStamp);
                             redux.Dispatch(JsonConvert.DeserializeObject<CustomerCreatedEvent>(@event.Data));
                             break;
                         case "CustomerFirstNameChangedEvent":
