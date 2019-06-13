@@ -39,6 +39,13 @@ namespace CQRS.EventSourcing.CRM.Application.Customers.Commands.CreateCustomer
 
                 var eventId = await _eventStore.SaveChange(aggregateId, @event);
 
+                await _mediator.Publish(new CustomerCreated
+                {
+                    AggregateId = aggregateId,
+                    EventId = eventId,
+                    DomainEvent = @event
+                }, cancellationToken);
+
                 return aggregateId;
             }
         }
