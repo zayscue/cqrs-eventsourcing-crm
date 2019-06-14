@@ -5,8 +5,8 @@ namespace CQRS.EventSourcing.CRM.Domain.Actions.Customers
 {
     public sealed class CreateCustomer : CommandAction<Customer>
     {
-        public override string EventName => "CustomerCreated";
-
+        public static readonly string Event = "CustomerCreated";
+        public override string EventName => Event;
         public string Prefix { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

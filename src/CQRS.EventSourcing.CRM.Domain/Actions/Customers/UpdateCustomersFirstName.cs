@@ -5,9 +5,9 @@ namespace CQRS.EventSourcing.CRM.Domain.Actions.Customers
 {
     public class UpdateCustomersFirstName : CommandAction<Customer>
     {
+        public static readonly string Event = "CustomersFirstNameUpdated";
+        public override string EventName => Event;
         public string FirstName { get; set; }
-
-        public override string EventName => "UpdatedCustomersFirstName";
 
         public override Dictionary<string, string> SerializeData()
         {

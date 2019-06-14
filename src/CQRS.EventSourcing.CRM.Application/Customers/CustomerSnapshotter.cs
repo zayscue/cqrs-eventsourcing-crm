@@ -23,20 +23,17 @@ namespace CQRS.EventSourcing.CRM.Application.Customers
             var customerSnapshotDeltas = await _eventStore.QuerySnapshotDeltas(AggregateType);
             foreach (var delta in customerSnapshotDeltas)
             {
-                ReduxStore<Customer> redux = null;
+                Customer customer = null;
                 if (delta.LastSnapshotVersion > 0)
                 {
                     var snapShot = await _eventStore.GetSnapshot(delta.AggregateId, delta.LastSnapshotVersion);
-                    var customerSnapshot = JsonConvert.DeserializeObject<Customer>(snapShot.SerializedData);
-                    redux = new ReduxStore<Customer>(Customer.Reducer, customerSnapshot);
+                    customer = JsonConvert.DeserializeObject<Customer>(snapShot.SerializedData);
                 }
                 else
                 {
-                    redux = new ReduxStore<Customer>(Customer.Reducer, new Customer
-                    {
-                        Id = delta.AggregateId
-                    });
+                    customer = new Customer { Id = delta.AggregateId };
                 }
+                var redux = new ReduxStore<Customer>(Customer.Reducer, customer);
 
                 var @events = await _eventStore.GetEvents(delta.AggregateId,
                     delta.LastSnapshotVersion, delta.CurrentVersion);
@@ -44,20 +41,20 @@ namespace CQRS.EventSourcing.CRM.Application.Customers
                 {
                     switch (@event.Name)
                     {
-                        case "CreateCustomer":
-                            redux.Dispatch(@event.TimeStamp);
+                        case "CustomerCreated":
+                            customer.Created = @event.TimeStamp;
                             redux.Dispatch(JsonConvert.DeserializeObject<CreateCustomer>(@event.Data));
                             break;
-                        case "UpdateCustomersFirstName":
+                        case "CustomersFirstNameUpdated":
                             redux.Dispatch(JsonConvert.DeserializeObject<UpdateCustomersFirstName>(@event.Data));
                             break;
-                        case "UpdateCustomersLastName":
+                        case "CustomersLastNameUpdated":
                             redux.Dispatch(JsonConvert.DeserializeObject<UpdateCustomersLastName>(@event.Data));
                             break;
-                        case "UpdateCustomersPrefix":
+                        case "CustomersPrefixUpdated":
                             redux.Dispatch(JsonConvert.DeserializeObject<UpdateCustomersPrefix>(@event.Data));
                             break;
-                        case "UpdateCustomersTitle":
+                        case "CustomersTitleUpdated":
                             redux.Dispatch(JsonConvert.DeserializeObject<UpdateCustomersTitle>(@event.Data));
                             break;
                         default:

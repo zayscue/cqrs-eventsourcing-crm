@@ -25,9 +25,6 @@ namespace CQRS.EventSourcing.CRM.Domain.Entities
         {
             switch (action)
             {
-                case DateTime createdTimestamp:
-                    state.Created = createdTimestamp;
-                    return state;
                 case CreateCustomer created:
                     state.FirstName = created.FirstName;
                     state.LastName = created.LastName;
