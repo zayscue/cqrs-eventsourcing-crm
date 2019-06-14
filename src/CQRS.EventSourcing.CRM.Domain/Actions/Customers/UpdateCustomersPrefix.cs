@@ -3,7 +3,7 @@ using CQRS.EventSourcing.CRM.Domain.Entities;
 
 namespace CQRS.EventSourcing.CRM.Domain.Actions.Customers
 {
-    public sealed class UpdateCustomersPrefix : CommandAction<Customer>
+    public sealed class UpdateCustomersPrefix : ActionBase<Customer>
     {
         public static readonly string Event = "CustomersPrefixUpdated";
         public override string EventName => Event;

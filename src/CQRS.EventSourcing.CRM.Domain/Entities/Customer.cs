@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using CQRS.EventSourcing.CRM.Domain.Actions;
 using CQRS.EventSourcing.CRM.Domain.Actions.Customers;
-using ActionType = System.Object;
 
 namespace CQRS.EventSourcing.CRM.Domain.Entities
 {
@@ -21,7 +21,7 @@ namespace CQRS.EventSourcing.CRM.Domain.Entities
         public DateTime? Deleted { get; set; }
         public ICollection<Address> Addresses { get; set; }
 
-        public static Customer Reducer(Customer state, ActionType action)
+        public static Customer Reducer(Customer state, IAction action)
         {
             switch (action)
             {

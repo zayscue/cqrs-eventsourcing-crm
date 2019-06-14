@@ -14,7 +14,7 @@ namespace CQRS.EventSourcing.CRM.Application.Customers.Commands.UpdateCustomer
     {
         public Guid AggregateId { get; set; }
         public IEnumerable<Guid> EventIds { get; set; }
-        public IEnumerable<ICommandAction> Actions { get; set; }
+        public IEnumerable<IAction> Actions { get; set; }
 
         public class CustomerUpdatedHandler : INotificationHandler<CustomerUpdated>
         {

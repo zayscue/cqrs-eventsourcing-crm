@@ -84,7 +84,7 @@ namespace CQRS.EventSourcing.CRM.Persistence.EventStore
             }
         }
 
-        public async Task<Guid> SaveChange(Guid aggregateId, ICommandAction action)
+        public async Task<Guid> SaveChange(Guid aggregateId, IAction action)
         {
             var sql = @"InsertEvent";
             using (var db = _dbExecutorFactory.CreateExecutor())
@@ -101,7 +101,7 @@ namespace CQRS.EventSourcing.CRM.Persistence.EventStore
             }
         }
 
-        public async Task<IEnumerable<Guid>> SaveChanges(Guid aggregateId, IEnumerable<ICommandAction> actions)
+        public async Task<IEnumerable<Guid>> SaveChanges(Guid aggregateId, IEnumerable<IAction> actions)
         {
             var eventIds = new List<Guid>();
             foreach (var action in actions)

@@ -42,7 +42,7 @@ namespace CQRS.EventSourcing.CRM.Application.Customers.Commands.UpdateCustomer
                     throw new NotFoundException(nameof(Customer), request.Id);
                 }
 
-                var actions = new List<ICommandAction>();
+                var actions = new List<IAction>();
                 if (!string.Equals(entity.FirstName, request.FirstName))
                     actions.Add(new UpdateCustomersFirstName { FirstName = request.FirstName });
                 if (!string.Equals(entity.LastName, request.LastName))

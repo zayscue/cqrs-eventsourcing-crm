@@ -1,23 +1,23 @@
-using ActionType = System.Object;
+using CQRS.EventSourcing.CRM.Domain.Actions;
 
-public delegate T Reducer<T>(T state, ActionType action);
+public delegate TEntity Reducer<TEntity>(TEntity state, IAction action) where TEntity : class;
 
-public class ReduxStore<T>
+public class ReduxStore<TEntity> where TEntity : class
 {
-    Reducer<T> reducer;
+    readonly Reducer<TEntity> reducer;
 
-    public T State { get; private set; }
+    public TEntity State { get; private set; }
 
-    public delegate void SubscribeDelegate(T state);
+    public delegate void SubscribeDelegate(TEntity state);
     public event SubscribeDelegate Subscribe;
 
-    public ReduxStore(Reducer<T> reducer, T initialState)
+    public ReduxStore(Reducer<TEntity> reducer, TEntity initialState)
     {
         this.reducer = reducer;
         State = initialState;
     }
 
-    public ActionType Dispatch(ActionType action)
+    public IAction Dispatch(IAction action)
     {
         State = reducer(State, action);
         Subscribe?.Invoke(State);

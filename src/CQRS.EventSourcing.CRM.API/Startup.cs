@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using CQRS.EventSourcing.CRM.API.Services;
 using CQRS.EventSourcing.CRM.Application.Customers;
 using CQRS.EventSourcing.CRM.Application.Interfaces;
 using CQRS.EventSourcing.CRM.Persistence;

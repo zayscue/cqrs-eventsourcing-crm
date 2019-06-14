@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace CQRS.EventSourcing.CRM.Domain.Actions
 {
-    public abstract class CommandAction<TEntity> : ICommandAction where TEntity : class
+    public abstract class ActionBase<TEntity> : IAction where TEntity : class
     {
         public abstract string EventName { get; }
 

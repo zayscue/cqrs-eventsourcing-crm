@@ -5,7 +5,7 @@ using CQRS.EventSourcing.CRM.Application.Customers;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace CQRS.EventSourcing.CRM.API
+namespace CQRS.EventSourcing.CRM.API.Services
 {
     internal class TimedCustomerSnapshottingService : IHostedService, IDisposable
     {
