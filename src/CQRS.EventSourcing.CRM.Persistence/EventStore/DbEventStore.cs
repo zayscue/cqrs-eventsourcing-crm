@@ -72,7 +72,8 @@ namespace CQRS.EventSourcing.CRM.Persistence.EventStore
                         FROM [CRM].[dbo].[Events] as events
                         WHERE events.[AggregateId] = @AggregateId
                             AND events.[Version] > @StartRange
-                            AND events.[Version] <= @EndRange";
+                            AND events.[Version] <= @EndRange
+                        ORDER BY events.[Version] ASC";
             using (var db = _dbExecutorFactory.CreateExecutor())
             {
                 return await db.QueryAsync<Event>(sql, new
