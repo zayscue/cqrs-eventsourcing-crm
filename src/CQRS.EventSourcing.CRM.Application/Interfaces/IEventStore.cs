@@ -9,8 +9,8 @@ namespace CQRS.EventSourcing.CRM.Application.Interfaces
 {
     public interface IEventStore
     {
-        Task<Guid> SaveChange(Guid aggregateId, ICommandAction @event);
-        Task<IEnumerable<Guid>> SaveChanges(Guid aggregateId, IEnumerable<ICommandAction> @events);
+        Task<Guid> SaveChange(Guid aggregateId, ICommandAction action);
+        Task<IEnumerable<Guid>> SaveChanges(Guid aggregateId, IEnumerable<ICommandAction> actions);
         Task<Event> GetEvent(Guid eventId);
         Task<IEnumerable<Event>> GetEvents(Guid aggregateId, int startRange, int endRange);
         Task<IEnumerable<(Guid AggregateId, int LastSnapshotVersion, int CurrentVersion)>> QuerySnapshotDeltas(string aggregateType);

@@ -84,16 +84,16 @@ namespace CQRS.EventSourcing.CRM.Persistence.EventStore
             }
         }
 
-        public async Task<Guid> SaveChange(Guid aggregateId, ICommandAction @event)
+        public async Task<Guid> SaveChange(Guid aggregateId, ICommandAction action)
         {
             var sql = @"InsertEvent";
             using (var db = _dbExecutorFactory.CreateExecutor())
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("@AggregateId", aggregateId, dbType: DbType.Guid, direction: ParameterDirection.Input);
-                parameters.Add("@Type", @event.EntityType, dbType: DbType.String, direction: ParameterDirection.Input);
-                parameters.Add("@EventName", @event.EventName, dbType: DbType.String, direction: ParameterDirection.Input);
-                parameters.Add("@EventData", JsonConvert.SerializeObject(@event.SerializeData()), dbType: DbType.String, direction: ParameterDirection.Input);
+                parameters.Add("@Type", action.EntityType, dbType: DbType.String, direction: ParameterDirection.Input);
+                parameters.Add("@EventName", action.EventName, dbType: DbType.String, direction: ParameterDirection.Input);
+                parameters.Add("@EventData", JsonConvert.SerializeObject(action.SerializeData()), dbType: DbType.String, direction: ParameterDirection.Input);
                 parameters.Add("@EventId", dbType: DbType.Guid, direction: ParameterDirection.Output);
                 await db.ExecuteAsync(sql, parameters, commandType: CommandType.StoredProcedure);
 
@@ -101,12 +101,12 @@ namespace CQRS.EventSourcing.CRM.Persistence.EventStore
             }
         }
 
-        public async Task<IEnumerable<Guid>> SaveChanges(Guid aggregateId, IEnumerable<ICommandAction> @events)
+        public async Task<IEnumerable<Guid>> SaveChanges(Guid aggregateId, IEnumerable<ICommandAction> actions)
         {
             var eventIds = new List<Guid>();
-            foreach (var @event in @events)
+            foreach (var action in actions)
             {
-                var eventId = await SaveChange(aggregateId, @event);
+                var eventId = await SaveChange(aggregateId, action);
                 eventIds.Add(eventId);
             }
             return eventIds;
