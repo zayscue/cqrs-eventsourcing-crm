@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using CQRS.EventSourcing.CRM.Domain.Events.Customers;
+using CQRS.EventSourcing.CRM.Domain.Actions.Customers;
 using ActionType = System.Object;
 
 namespace CQRS.EventSourcing.CRM.Domain.Entities
@@ -28,22 +28,22 @@ namespace CQRS.EventSourcing.CRM.Domain.Entities
                 case DateTime createdTimestamp:
                     state.Created = createdTimestamp;
                     return state;
-                case CustomerCreatedEvent created:
+                case CreateCustomer created:
                     state.FirstName = created.FirstName;
                     state.LastName = created.LastName;
                     state.Prefix = created.Prefix;
                     state.Title = created.Title;
                     return state;
-                case CustomerFirstNameChangedEvent firstNameChanged:
+                case UpdateCustomersFirstName firstNameChanged:
                     state.FirstName = firstNameChanged.FirstName;
                     return state;
-                case CustomerLastNameChangedEvent lastNameChanged:
+                case UpdateCustomersLastName lastNameChanged:
                     state.LastName = lastNameChanged.LastName;
                     return state;
-                case CustomerPrefixChangedEvent prefixChanged:
+                case UpdateCustomersPrefix prefixChanged:
                     state.Prefix = prefixChanged.Prefix;
                     return state;
-                case CustomerTitleChangedEvent titleChanged:
+                case UpdateCustomersTitle titleChanged:
                     state.Title = titleChanged.Title;
                     return state;
                 default:

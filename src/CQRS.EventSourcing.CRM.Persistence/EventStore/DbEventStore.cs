@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Transactions;
 using CQRS.EventSourcing.CRM.Application.Interfaces;
 using CQRS.EventSourcing.CRM.Domain;
-using CQRS.EventSourcing.CRM.Domain.Events;
+using CQRS.EventSourcing.CRM.Domain.Actions;
 using CQRS.EventSourcing.CRM.Domain.EventStore;
 using Dapper;
 using Dapper.Abstractions;
@@ -84,7 +84,7 @@ namespace CQRS.EventSourcing.CRM.Persistence.EventStore
             }
         }
 
-        public async Task<Guid> SaveChange(Guid aggregateId, IDomainEvent @event)
+        public async Task<Guid> SaveChange(Guid aggregateId, ICommandAction @event)
         {
             var sql = @"InsertEvent";
             using (var db = _dbExecutorFactory.CreateExecutor())
@@ -101,7 +101,7 @@ namespace CQRS.EventSourcing.CRM.Persistence.EventStore
             }
         }
 
-        public async Task<IEnumerable<Guid>> SaveChanges(Guid aggregateId, IEnumerable<IDomainEvent> @events)
+        public async Task<IEnumerable<Guid>> SaveChanges(Guid aggregateId, IEnumerable<ICommandAction> @events)
         {
             var eventIds = new List<Guid>();
             foreach (var @event in @events)

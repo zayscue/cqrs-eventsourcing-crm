@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using CQRS.EventSourcing.CRM.Application.Interfaces;
 using CQRS.EventSourcing.CRM.Domain.Entities;
-using CQRS.EventSourcing.CRM.Domain.Events.Customers;
 using MediatR;
 
 namespace CQRS.EventSourcing.CRM.Application.Customers.Commands.CreateCustomer
@@ -12,7 +11,7 @@ namespace CQRS.EventSourcing.CRM.Application.Customers.Commands.CreateCustomer
     {
         public Guid AggregateId { get; set; }
         public Guid EventId { get; set; }
-        public CustomerCreatedEvent DomainEvent { get; set; }
+        public Domain.Actions.Customers.CreateCustomer Action { get; set; }
 
         public class CustomerCreatedHandler : INotificationHandler<CustomerCreated>
         {
@@ -35,7 +34,7 @@ namespace CQRS.EventSourcing.CRM.Application.Customers.Commands.CreateCustomer
                     Created = @event.TimeStamp
                 };
                 var redux = new ReduxStore<Customer>(Customer.Reducer, entity);
-                redux.Dispatch(notification.DomainEvent);
+                redux.Dispatch(notification.Action);
 
                 await _context.Customers.AddAsync(entity, cancellationToken);
 

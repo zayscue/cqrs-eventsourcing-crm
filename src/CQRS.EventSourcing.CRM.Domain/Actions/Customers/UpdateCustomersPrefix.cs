@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using CQRS.EventSourcing.CRM.Domain.Entities;
 
-namespace CQRS.EventSourcing.CRM.Domain.Events.Customers
+namespace CQRS.EventSourcing.CRM.Domain.Actions.Customers
 {
-    public class CustomerPrefixChangedEvent : DomainEvent<Customer>
+    public class UpdateCustomersPrefix : CommandAction<Customer>
     {
         public string Prefix { get; set; }
 
-        public override string EventName => GetType().Name;
+        public override string EventName => "UpdatedCustomersPrefix";
 
         public override Dictionary<string, string> SerializeData()
         {

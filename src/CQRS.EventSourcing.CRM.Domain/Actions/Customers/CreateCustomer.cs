@@ -1,12 +1,11 @@
-using System;
 using System.Collections.Generic;
 using CQRS.EventSourcing.CRM.Domain.Entities;
 
-namespace CQRS.EventSourcing.CRM.Domain.Events.Customers
+namespace CQRS.EventSourcing.CRM.Domain.Actions.Customers
 {
-    public sealed class CustomerCreatedEvent : DomainEvent<Customer>
+    public sealed class CreateCustomer : CommandAction<Customer>
     {
-        public override string EventName => GetType().Name;
+        public override string EventName => "CustomerCreated";
 
         public string Prefix { get; set; }
         public string FirstName { get; set; }

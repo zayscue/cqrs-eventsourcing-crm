@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using CQRS.EventSourcing.CRM.Application.Interfaces;
 using CQRS.EventSourcing.CRM.Domain;
+using CQRS.EventSourcing.CRM.Domain.Actions.Customers;
 using CQRS.EventSourcing.CRM.Domain.Entities;
-using CQRS.EventSourcing.CRM.Domain.Events.Customers;
 using CQRS.EventSourcing.CRM.Domain.EventStore;
 using Newtonsoft.Json;
 
@@ -44,21 +44,21 @@ namespace CQRS.EventSourcing.CRM.Application.Customers
                 {
                     switch (@event.Name)
                     {
-                        case "CustomerCreatedEvent":
+                        case "CreateCustomer":
                             redux.Dispatch(@event.TimeStamp);
-                            redux.Dispatch(JsonConvert.DeserializeObject<CustomerCreatedEvent>(@event.Data));
+                            redux.Dispatch(JsonConvert.DeserializeObject<CreateCustomer>(@event.Data));
                             break;
-                        case "CustomerFirstNameChangedEvent":
-                            redux.Dispatch(JsonConvert.DeserializeObject<CustomerFirstNameChangedEvent>(@event.Data));
+                        case "UpdateCustomersFirstName":
+                            redux.Dispatch(JsonConvert.DeserializeObject<UpdateCustomersFirstName>(@event.Data));
                             break;
-                        case "CustomerLastNameChangedEvent":
-                            redux.Dispatch(JsonConvert.DeserializeObject<CustomerLastNameChangedEvent>(@event.Data));
+                        case "UpdateCustomersLastName":
+                            redux.Dispatch(JsonConvert.DeserializeObject<UpdateCustomersLastName>(@event.Data));
                             break;
-                        case "CustomerPrefixChangedEvent":
-                            redux.Dispatch(JsonConvert.DeserializeObject<CustomerPrefixChangedEvent>(@event.Data));
+                        case "UpdateCustomersPrefix":
+                            redux.Dispatch(JsonConvert.DeserializeObject<UpdateCustomersPrefix>(@event.Data));
                             break;
-                        case "CustomerTitleChangedEvent":
-                            redux.Dispatch(JsonConvert.DeserializeObject<CustomerTitleChangedEvent>(@event.Data));
+                        case "UpdateCustomersTitle":
+                            redux.Dispatch(JsonConvert.DeserializeObject<UpdateCustomersTitle>(@event.Data));
                             break;
                         default:
                             break;

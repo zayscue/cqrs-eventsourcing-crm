@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 
-namespace CQRS.EventSourcing.CRM.Domain.Events
+namespace CQRS.EventSourcing.CRM.Domain.Actions
 {
-    public abstract class DomainEvent<TEntity> : IDomainEvent where TEntity : class
+    public abstract class CommandAction<TEntity> : ICommandAction where TEntity : class
     {
         public abstract string EventName { get; }
 

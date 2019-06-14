@@ -4,9 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using CQRS.EventSourcing.CRM.Application.Exceptions;
 using CQRS.EventSourcing.CRM.Application.Interfaces;
+using CQRS.EventSourcing.CRM.Domain.Actions;
+using CQRS.EventSourcing.CRM.Domain.Actions.Customers;
 using CQRS.EventSourcing.CRM.Domain.Entities;
-using CQRS.EventSourcing.CRM.Domain.Events;
-using CQRS.EventSourcing.CRM.Domain.Events.Customers;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -35,31 +35,31 @@ namespace CQRS.EventSourcing.CRM.Application.Customers.Commands.UpdateCustomer
 
             public async Task<Unit> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
             {
-                var entity = await _context.Customers.SingleOrDefaultAsync(x => x.Id == request.Id);
+                var entity = await _context.Customers.SingleOrDefaultAsync(x => x.Id == request.Id, cancellationToken: cancellationToken);
 
                 if (entity == null)
                 {
                     throw new NotFoundException(nameof(Customer), request.Id);
                 }
 
-                var domainEvents = new List<IDomainEvent>();
+                var actions = new List<ICommandAction>();
                 if (!string.Equals(entity.FirstName, request.FirstName))
-                    domainEvents.Add(new CustomerFirstNameChangedEvent { FirstName = request.FirstName });
+                    actions.Add(new UpdateCustomersFirstName { FirstName = request.FirstName });
                 if (!string.Equals(entity.LastName, request.LastName))
-                    domainEvents.Add(new CustomerLastNameChangedEvent { LastName = request.LastName });
+                    actions.Add(new UpdateCustomersLastName { LastName = request.LastName });
                 if (!string.Equals(entity.Prefix, request.Prefix))
-                    domainEvents.Add(new CustomerPrefixChangedEvent { Prefix = request.Prefix });
+                    actions.Add(new UpdateCustomersPrefix { Prefix = request.Prefix });
                 if (!string.Equals(entity.Title, request.Title))
-                    domainEvents.Add(new CustomerTitleChangedEvent { Title = request.Title });
+                    actions.Add(new UpdateCustomersTitle { Title = request.Title });
 
-                var eventIds = await _eventStore.SaveChanges(request.Id, domainEvents);
+                var eventIds = await _eventStore.SaveChanges(request.Id, actions);
 
                 await _mediator.Publish(new CustomerUpdated
                 {
                     AggregateId = request.Id,
                     EventIds = eventIds,
-                    DomainEvents = domainEvents
-                });
+                    Actions = actions
+                }, cancellationToken);
 
                 return Unit.Value;
             }

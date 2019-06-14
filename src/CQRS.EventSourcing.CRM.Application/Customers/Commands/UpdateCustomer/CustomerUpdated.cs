@@ -4,8 +4,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using CQRS.EventSourcing.CRM.Application.Exceptions;
 using CQRS.EventSourcing.CRM.Application.Interfaces;
+using CQRS.EventSourcing.CRM.Domain.Actions;
 using CQRS.EventSourcing.CRM.Domain.Entities;
-using CQRS.EventSourcing.CRM.Domain.Events;
 using MediatR;
 
 namespace CQRS.EventSourcing.CRM.Application.Customers.Commands.UpdateCustomer
@@ -14,7 +14,7 @@ namespace CQRS.EventSourcing.CRM.Application.Customers.Commands.UpdateCustomer
     {
         public Guid AggregateId { get; set; }
         public IEnumerable<Guid> EventIds { get; set; }
-        public IEnumerable<IDomainEvent> DomainEvents { get; set; }
+        public IEnumerable<ICommandAction> Actions { get; set; }
 
         public class CustomerUpdatedHandler : INotificationHandler<CustomerUpdated>
         {
@@ -37,9 +37,9 @@ namespace CQRS.EventSourcing.CRM.Application.Customers.Commands.UpdateCustomer
                 }
 
                 var redux = new ReduxStore<Customer>(Customer.Reducer, entity);
-                foreach (var domainEvent in notification.DomainEvents)
+                foreach (var action in notification.Actions)
                 {
-                    redux.Dispatch(domainEvent);
+                    redux.Dispatch(action);
                 }
 
                 await _context.SaveChangesAsync(cancellationToken);

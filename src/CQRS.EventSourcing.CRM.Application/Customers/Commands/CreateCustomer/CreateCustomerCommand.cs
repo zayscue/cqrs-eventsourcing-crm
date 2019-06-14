@@ -2,7 +2,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using CQRS.EventSourcing.CRM.Application.Interfaces;
-using CQRS.EventSourcing.CRM.Domain.Events.Customers;
 using MediatR;
 
 namespace CQRS.EventSourcing.CRM.Application.Customers.Commands.CreateCustomer
@@ -29,7 +28,7 @@ namespace CQRS.EventSourcing.CRM.Application.Customers.Commands.CreateCustomer
             {
                 var aggregateId = Guid.NewGuid();
 
-                var @event = new CustomerCreatedEvent
+                var action = new Domain.Actions.Customers.CreateCustomer
                 {
                     Prefix = request.Prefix,
                     FirstName = request.FirstName,
@@ -37,13 +36,13 @@ namespace CQRS.EventSourcing.CRM.Application.Customers.Commands.CreateCustomer
                     Title = request.Title
                 };
 
-                var eventId = await _eventStore.SaveChange(aggregateId, @event);
+                var eventId = await _eventStore.SaveChange(aggregateId, action);
 
                 await _mediator.Publish(new CustomerCreated
                 {
                     AggregateId = aggregateId,
                     EventId = eventId,
-                    DomainEvent = @event
+                    Action = action
                 }, cancellationToken);
 
                 return aggregateId;
