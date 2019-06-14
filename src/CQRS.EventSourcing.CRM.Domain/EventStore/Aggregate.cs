@@ -1,6 +1,6 @@
 using System;
 
-namespace CQRS.EventSourcing.CRM.Domain
+namespace CQRS.EventSourcing.CRM.Domain.EventStore
 {
     public class Aggregate
     {

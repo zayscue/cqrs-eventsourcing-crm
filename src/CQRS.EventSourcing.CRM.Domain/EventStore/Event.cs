@@ -1,6 +1,6 @@
 using System;
 
-namespace CQRS.EventSourcing.CRM.Domain
+namespace CQRS.EventSourcing.CRM.Domain.EventStore
 {
     public class Event
     {
@@ -11,7 +11,5 @@ namespace CQRS.EventSourcing.CRM.Domain
         public Guid AggregateId { get; set; }
         public long Sequence { get; set; }
         public string Data { get; set; }
-
-        public virtual Aggregate Aggregate { get; set; }
     }
 }

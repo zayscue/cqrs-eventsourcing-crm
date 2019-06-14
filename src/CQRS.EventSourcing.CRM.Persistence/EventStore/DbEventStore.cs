@@ -6,6 +6,7 @@ using System.Transactions;
 using CQRS.EventSourcing.CRM.Application.Interfaces;
 using CQRS.EventSourcing.CRM.Domain;
 using CQRS.EventSourcing.CRM.Domain.Events;
+using CQRS.EventSourcing.CRM.Domain.EventStore;
 using Dapper;
 using Dapper.Abstractions;
 using Newtonsoft.Json;

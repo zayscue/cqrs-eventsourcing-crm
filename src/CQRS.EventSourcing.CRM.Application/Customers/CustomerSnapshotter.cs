@@ -3,6 +3,7 @@ using CQRS.EventSourcing.CRM.Application.Interfaces;
 using CQRS.EventSourcing.CRM.Domain;
 using CQRS.EventSourcing.CRM.Domain.Entities;
 using CQRS.EventSourcing.CRM.Domain.Events.Customers;
+using CQRS.EventSourcing.CRM.Domain.EventStore;
 using Newtonsoft.Json;
 
 namespace CQRS.EventSourcing.CRM.Application.Customers

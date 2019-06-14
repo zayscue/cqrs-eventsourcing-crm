@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using CQRS.EventSourcing.CRM.Domain;
 using CQRS.EventSourcing.CRM.Domain.Events;
+using CQRS.EventSourcing.CRM.Domain.EventStore;
 
 namespace CQRS.EventSourcing.CRM.Application.Interfaces
 {
