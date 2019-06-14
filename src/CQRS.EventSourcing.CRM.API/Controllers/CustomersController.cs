@@ -20,7 +20,7 @@ namespace CQRS.EventSourcing.CRM.API.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
         public async Task<IActionResult> Create([FromBody]CreateCustomerCommand command)
         {
