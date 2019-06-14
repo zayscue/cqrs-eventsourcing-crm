@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using AutoMapper;
 using CQRS.EventSourcing.CRM.API.Services;
 using CQRS.EventSourcing.CRM.Application.Customers;
+using CQRS.EventSourcing.CRM.Application.Infrastructure.Mapper.Profiles;
 using CQRS.EventSourcing.CRM.Application.Interfaces;
 using CQRS.EventSourcing.CRM.Persistence;
 using CQRS.EventSourcing.CRM.Persistence.EventStore;
@@ -34,6 +36,9 @@ namespace CQRS.EventSourcing.CRM.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add AutoMapper
+            services.AddAutoMapper(typeof(CustomerProfile).Assembly);
+
             //Add MediatR
             services.AddMediatR(typeof(CQRS.EventSourcing.CRM.Application.Customers.Commands.CreateCustomer.CreateCustomerCommand.Handler).GetTypeInfo().Assembly);
 
