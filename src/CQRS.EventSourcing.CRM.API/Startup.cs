@@ -58,6 +58,18 @@ namespace CQRS.EventSourcing.CRM.API
             services.AddHostedService<TimedCustomerSnapshottingService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder
+                    .SetIsOriginAllowed((host) => true)
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+            });
+
+            services.AddSwaggerDocument();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -74,7 +86,14 @@ namespace CQRS.EventSourcing.CRM.API
             }
 
             app.UseHttpsRedirection();
-            app.UseMvc();
+
+            app.UseCors("CorsPolicy");
+
+            app.UseMvcWithDefaultRoute();
+
+            // Register the Swagger generator and the Swagger UI middlewares
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
         }
     }
 }

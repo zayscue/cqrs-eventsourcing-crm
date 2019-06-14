@@ -5,13 +5,14 @@
     <RootNamespace>CQRS.EventSourcing.CRM.API</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
-    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.1.1"/>
+    <PackageReference Include="Microsoft.AspNetCore.App"/>
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All"/>
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="7.0.0"/>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0"/>
+    <PackageReference Include="NSwag.AspNetCore" Version="13.0.1"/>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CQRS.EventSourcing.CRM.Persistence\CQRS.EventSourcing.CRM.Persistence.csproj" />
+    <ProjectReference Include="..\CQRS.EventSourcing.CRM.Persistence\CQRS.EventSourcing.CRM.Persistence.csproj"/>
   </ItemGroup>
 </Project>
